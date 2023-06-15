@@ -20,7 +20,7 @@ param (
     $flags = "-P",  
     [Parameter()]
     [string]
-    $logFile = "P:\rClone\mylogfile.txt",
+    $logFile = "c:\temp\mylogfile.txt",
     [Parameter()]
     [validateSet("DEBUG", "INFO", "NOTICE", "ERROR")]
     [string]
