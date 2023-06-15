@@ -24,8 +24,10 @@ param (
     [Parameter()]
     [validateSet("DEBUG", "INFO", "NOTICE", "ERROR")]
     [string]
-    $logLevel = "INFO"
-    
+    $logLevel = "INFO",
+    [Parameter()]
+    [int]
+    $transfers = 20
 )
 
 if(!(Test-Path $rClonePath -PathType Leaf)){
@@ -53,6 +55,11 @@ if($logFile){
 }else{
     $logparmeters = ""
 }
+if($transfers)
+{
+    $logparmeters += " --transfers $transfers"
+}
+
 $argumentList = "$action $flags `"$sourcePath`" `"$remoteName`:$destinationPath`"" + " $logparmeters"
 
 Start-Process -FilePath $rClonePath -ArgumentList $argumentList -NoNewWindow -Wait
