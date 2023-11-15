@@ -72,7 +72,7 @@ if(-not ($RcloneDontPreserveMetadata)){
 
 }
 
-if ($RcloneDryRun){
+if ($RcloneDryRun -eq $true){
     Write-Output "Dry run enabled"
     $argumentList = $argumentList + " --dry-run"
 }
@@ -86,13 +86,15 @@ if ($RcloneMinAge){
     $argumentList = $argumentList + " --min-age $RcloneMinAge"
 }
 
+Write-Host -BackgroundColor Yellow "Running: $RclonePath $argumentList"
 
 $argumentList = $argumentList  + " `"$RcloneLocalSRCPath`" `"$RcloneLocalDSTPath`""
 
-Start-Process -FilePath $RclonePath -ArgumentList $argumentList -NoNewWindow -Wait
+$process = Start-Process -FilePath $RclonePath -ArgumentList $argumentList -NoNewWindow -Wait
+$ProcessExitCode = $process.ExitCode
 
 
-switch ($LastExitCode) {
+switch ($ProcessExitCode) {
     0 { Write-Host -ForegroundColor Green "success" }
     1 { Write-Host -ForegroundColor Red "Syntax or usage error" }
     2 { Write-Host -ForegroundColor Red "Error not otherwise categorised" }
@@ -105,7 +107,5 @@ switch ($LastExitCode) {
     9 { Write-Host -ForegroundColor Red "Operation successful, but no files transferred" }
     10 { Write-Host -ForegroundColor Red "Duration exceeded - limit set by --max-duration reached" }
    
-    Default { Write-Host -ForegroundColor Red "Unknown Error, exitcode $LastExitCode" }
+    Default { Write-Host -ForegroundColor Green "No Exit code, success" }
 }
-
-
